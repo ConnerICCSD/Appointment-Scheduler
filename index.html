@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Schedule with Mr. Conner</title>
+  <style>
+    body { 
+      font-family: sans-serif; 
+      padding: 20px; 
+      background: #111827; /* Dark background */
+      color: #f3f4f6;       /* Light text */
+    }
+    h1, h2 { 
+      color: #e5e7eb;       /* Soft white for headers */
+    }
+    .button-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    a.button {
+      display: inline-block;
+      padding: 12px 18px;
+      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+      color: white;
+      text-decoration: none;
+      border-radius: 10px;
+      text-align: center;
+      min-width: 130px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.4);
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+    a.button:hover { 
+      background: linear-gradient(135deg, #7c3aed, #6d28d9);
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+  <h1>Book an Appointment with Mr. Conner</h1>
+
+  <h2>Morning Appointments (M/W/F, 7:50–8:40 AM)</h2>
+  <div id="morning-buttons" class="button-container"></div>
+
+  <h2>AFT Appointments (M/T/F, 1:44–2:14 PM)</h2>
+  <div id="aft-buttons" class="button-container"></div>
+
+  <script>
+    function formatDateTime(date) {
+      return date.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+    }
+
+    function createEventLink(title, start, end) {
+      const base = "https://calendar.google.com/calendar/render?action=TEMPLATE";
+      return `${base}&text=${encodeURIComponent(title)}&dates=${formatDateTime(start)}/${formatDateTime(end)}&add=conner.jeff@iowacityschools.org`;
+    }
+
+    function addButtons(containerId, daysOfWeek, startHour, startMin, durationMins, count=9) {
+      const container = document.getElementById(containerId);
+      const now = new Date();
+      let found = 0, date = new Date(now);
+
+      while (found < count) {
+        date.setDate(date.getDate() + 1);
+        const day = date.getDay(); // 0=Sun,1=Mon,...
+        if (daysOfWeek.includes(day)) {
+          const start = new Date(date);
+          start.setHours(startHour, startMin, 0, 0);
+          const end = new Date(start.getTime() + durationMins*60000);
+
+          // Button label: Day – M/D
+          const label = `${start.toLocaleDateString("en-US", { weekday: "long" })} - ${start.toLocaleDateString("en-US", { month: "numeric", day: "numeric" })}`;
+
+          const url = createEventLink("Meeting with Mr. Conner", start, end);
+
+          const a = document.createElement("a");
+          a.href = url;
+          a.target = "_blank";
+          a.className = "button";
+          a.textContent = label;
+
+          container.appendChild(a);
+          found++;
+        }
+      }
+    }
+
+    // Morning: M/W/F (1,3,5), 7:50–8:40
+    addButtons("morning-buttons", [1,3,5], 7, 50, 50, 9);
+
+    // AFT: M/T/F (1,2,5), 1:44–2:14
+    addButtons("aft-buttons", [1,2,5], 13, 44, 30, 9);
+  </script>
+</body>
+</html>
