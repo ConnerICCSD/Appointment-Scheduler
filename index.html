@@ -90,7 +90,7 @@
       let found = 0, date = new Date(now);
 
       while (found < count) {
-        date.setDate(date.getDate() + 1);
+        date.setDate(date.getDate());
         const day = date.getDay(); // 0=Sun,1=Mon,...
         if (daysOfWeek.includes(day)) {
           const start = new Date(date);
@@ -122,3 +122,4 @@
   </script>
 </body>
 </html>
+
