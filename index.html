@@ -79,9 +79,10 @@
     }
 
     function createEventLink(title, start, end) {
-      const base = "https://calendar.google.com/calendar/render?action=TEMPLATE";
-      return `${base}&text=${encodeURIComponent(title)}&dates=${formatDateTime(start)}/${formatDateTime(end)}&add=conner.jeff@iowacityschools.org`;
-    }
+  const base = "https://calendar.google.com/calendar/render?action=TEMPLATE";
+  const description = "🏷️ Tag: Student-created event (do not delete this tag)\n";
+  return `${base}&text=${encodeURIComponent(title)}&dates=${formatDateTime(start)}/${formatDateTime(end)}&add=conner.jeff@iowacityschools.org&details=${encodeURIComponent(description)}`;
+	}
 
     function addButtons(containerId, daysOfWeek, startHour, startMin, durationMins, count=9, cssClass="") {
       const container = document.getElementById(containerId);
